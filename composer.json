@@ -1,0 +1,23 @@
+{
+    "name": "jbruni/larnotify",
+    "description": "Notification Services for Laravel 4",
+    "keywords": ["notification", "messages", "laravel"],
+    "homepage": "http://github.com/jbruni/larnotify",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "J. Bruni",
+            "email": "contato@jbruni.com.br"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.x"
+    },
+    "autoload": {
+        "psr-0": {
+            "Jbruni\\Larnotify": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
