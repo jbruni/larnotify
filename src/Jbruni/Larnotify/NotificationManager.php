@@ -138,24 +138,22 @@ class NotificationManager implements ArrayAccess, ArrayableInterface, Countable,
 	 * It depends on what has been optionally set by the first parameter:
 	 * 1) A STRING or an ARRAY containing the remaining "sprintf" arguments. Example 1: "J. Bruni" Example 2: array("J. Bruni", "male")
 	 * 2) An ARRAY containing the template data. Example: array("name" => "J. Bruni", "country" => "Brazil")
-	 * 3) You can specify a STRING containing a single message or an ARRAY of string messages.
+	 * 3) The message. Usually a STRING, but it can be of any type.
 	 * 
 	 * @param string $template   OPTIONAL (see above)
-	 * @param string|array $message   Message contents (see above)
+	 * @param mixed $message   Message contents (see above)
 	 */
 	public function add($template = '', $message = '')
 	{
-		$multiple = FALSE;
 		$where = $template;
 
 		if (func_num_args() < 2)
 		{
-			$message = $template;
 			$where = 'default.msg';
-			$multiple = is_array($message);
+			$message = $template;
 		}
 
-		if (preg_match('/^(([^.]+\.)?view):(.*)$/', $template, $matches) === 1)
+		elseif (preg_match('/^(([^.]+\.)?view):(.*)$/', $template, $matches) === 1)
 		{
 			$where = $matches[1];
 			$message = array(
@@ -164,7 +162,7 @@ class NotificationManager implements ArrayAccess, ArrayableInterface, Countable,
 			);
 		}
 
-		if (preg_match('/^(([^.]+\.)?sprintf):(.*)$/', $template, $matches) === 1)
+		elseif (preg_match('/^(([^.]+\.)?sprintf):(.*)$/', $template, $matches) === 1)
 		{
 			$where = $matches[1];
 			$message = array_merge(
@@ -175,19 +173,7 @@ class NotificationManager implements ArrayAccess, ArrayableInterface, Countable,
 
 		list($bag, $type) = $this->getBagType($where);
 
-		$messageBag = $this->getMessageBag($bag, self::CREATE_ATTACHED);
-
-		if (!$multiple)
-		{
-			return $messageBag->add($type, $message);
-		}
-
-		foreach ($message as $msg)
-		{
-			$result = $messageBag->add($type, $msg);
-		}
-
-		return $result;
+		return $this->getMessageBag($bag, self::CREATE_ATTACHED)->add($type, $message);
 	}
 
 	/**
